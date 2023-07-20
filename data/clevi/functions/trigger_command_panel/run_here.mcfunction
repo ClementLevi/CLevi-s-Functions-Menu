@@ -1,0 +1,1 @@
+execute as @r[tag=IsRunningCommand, scores={command_panel=2}] run function clevi:commands/here

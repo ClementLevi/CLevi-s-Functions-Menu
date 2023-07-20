@@ -1,0 +1,1 @@
+execute as @r[tag=IsRunningCommand, scores={command_panel=9}] run function clevi:commands/kill

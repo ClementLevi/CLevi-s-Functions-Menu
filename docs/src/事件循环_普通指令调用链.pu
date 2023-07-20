@@ -1,0 +1,47 @@
+' 请使用PlantUML编译此图片
+@startuml 普通命令调用链示意图
+skinparam style strictuml
+actor Player as "玩家"
+database CMD as "计分板项（CMD）：\ncommand_panel"
+participant EL as "每1gt轮询事件循环：\nclevi:tick( )"
+participant REG as "注册表：\nregistries/event_loop_commands_registry"
+participant FUN as "已注册的函数控制器:\n（例）run_here( )"
+participant REAL as "功能业务逻辑\n实现函数"
+
+Player --> CMD: "/trigger command_panel set <某个注册的CMD值>\n设置要调用的功能CMD值"
+note right: 这一命令通常由主菜单UI的点击事件代为调用
+CMD --> CMD ++: 设置为对应值
+CMD <- EL: 轮询
+activate EL
+CMD -> EL: 值不为0
+EL -> REG **: 遍历注册表，查询CMD值对应何函数
+deactivate EL
+note over EL
+功能调用只是事件循环里的一项任务
+还有其他事要做，事件循环将会自行处理
+endnote
+
+alt 不存在此CMD值
+    REG ->x FUN: 遍历注册表无匹配\n调用失败
+    activate REG
+    deactivate REG
+    CMD o<- EL !!: 由事件循环控制器清空计分板项\n/scoreboard set @s command_panel 0
+    ' deactivate CMD
+else 存在CMD值
+    REG -> FUN **: 有至少一个匹配值\n按注册表顺序执行
+    activate CMD
+    activate REG
+    activate FUN
+    note over FUN: 一定会调用，但是：\n能否执行业务逻辑需要由trigger_command_panel/run_*判断，\n成功才调用业务逻辑
+    FUN -> REAL **: "业务逻辑实现\n（例）commands/here( )"
+    deactivate REG
+    note over REG: 所有注册过的函数都按顺序调用完成
+    destroy REG
+    deactivate FUN
+    activate REAL
+    destroy FUN
+    CMD o<- REAL --: 由业务逻辑函数退出CMD激活态\n/scoreboard set @s command_panel 0
+    destroy REAL
+deactivate CMD
+end
+@enduml

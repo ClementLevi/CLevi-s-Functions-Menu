@@ -1,0 +1,2 @@
+execute as @r[tag=IsRunningCommand, scores={command_panel=3, is_observing=0}] run function clevi:commands/ob/on
+execute as @r[tag=IsRunningCommand, scores={command_panel=4, is_observing=1}] run function clevi:commands/ob/off

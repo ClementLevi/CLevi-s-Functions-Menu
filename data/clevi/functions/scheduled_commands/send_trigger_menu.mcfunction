@@ -1,0 +1,1 @@
+tellraw @a[scores={is_online=0}] [{"text":"\u6b22\u8fce\u56de\u6765\uff0c\u5584\u7528JEI\uff0c"},{"text":"/trigger command_panel","color":"gold","clickEvent":{"action":"run_command","value":"/trigger command_panel"},"hoverEvent":{"action":"show_text","contents":"\u6e38\u620f\u5185\u529f\u80fd\u83dc\u5355"}},{"text":"\u4fdd\u4f51\u4f60 "}]

@@ -1,0 +1,18 @@
+' 请使用PlantUML编译此图片
+@startuml 闲时事件循环示意图
+skinparam style strictuml
+actor Player as "玩家"
+database CMD as "计分板项（CMD）：\ncommand_panel"
+participant EL as "每1gt轮询事件循环：\nclevi:tick( )"
+
+CMD <-- EL: 轮询
+activate EL
+CMD -> EL: CMD:0
+deactivate EL
+|||
+...下一gt...
+CMD <-- EL: 轮询
+CMD -> EL: ...
+
+
+@enduml
