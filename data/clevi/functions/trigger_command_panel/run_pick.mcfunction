@@ -1,1 +1,1 @@
-execute as @r[tag=IsRunningCommand, scores={command_panel=5}] run function clevi:commands/pick/pick
+execute as @r[tag=IsRunningCommand, scores={command_panel=5}] at @s run function clevi:commands/pick/pick

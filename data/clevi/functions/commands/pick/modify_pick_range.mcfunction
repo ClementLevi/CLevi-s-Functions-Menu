@@ -1,5 +1,4 @@
 # CMD: 50[-] 51[+]
-say hi
 
 # 上下限使用if子命令规定
 execute as @s[scores={command_panel=51}] if score @s pick_range matches ..14 run scoreboard players add @s pick_range 2
