@@ -128,7 +128,7 @@ Minecraft游戏提供了[minecraft:tick](./data/minecraft/tags/functions/tick.js
 
 主菜单UI界面提供了一系列可供点击的按钮，这是通过tellraw命令中的clickEvent与run_command实现的。对于本数据包而言，所有按钮都应当仅仅调用一个形如 `/trigger command_panel [set <一个被监听的CMD值>]` 的函数，让后面的实现交给事件循环机制。哪怕是 `/scoreboard players set @s 计分板名 114514 `或者 `/tp ~ ~1 ~` 这样简单的业务逻辑，也应当尽量避免直接嵌入到UI中。这是因为作者认为，UI应当与具体的业务逻辑实现相分离，不管业务逻辑看似暂时有多么简单。
 
-![事件循环的轮询](docs\images\闲时事件循环示意图.png)
+![事件循环的轮询](docs/images/普通命令调用链示意图.png)
 
 上述按钮导致了计分板项command_panel的数值发生变化，这叫做**回调函数的触发事件**。设置了的数值代表着每个回调函数通过**观察者机制**监听的整数值，我们称其为**命令值（CMD）**，这一整数必须唯一，且作为回调函数监听的目标选择器的参数之一。触发事件发生时，事件循环（表现为我们注入到了minecraft:tick标签中的[clevi:tick.mcfunction](.\data\clevi\functions\tick.mcfunction)）先给导致这一变化的玩家打上IsRunningCommand标签，这使得玩家被认为是当前正在执行命令的实体。这一看似多余的标签也允许了后续玩家延时执行某一回调函数，其command_panel值在一段时间内不为0，但未即刻呼叫处于“挂起”状态（拥有“SkipExecuteCommand”标签）。
 
@@ -136,7 +136,7 @@ Minecraft游戏提供了[minecraft:tick](./data/minecraft/tags/functions/tick.js
 
 监听机制、回调函数实际执行体与事件循环机制需要解耦，因此具体执行业务逻辑的函数体存放于[commands](.\data\clevi\functions\commands)文件夹下。有状态功能如难以在单文件中编成，可以分状态给出代码，但需要反向修改对应观察者的逻辑（在此，代码不可避免地耦合）。
 
-![一般函数的触发调用链](docs\images\普通命令调用链示意图.png)
+![一般函数的触发调用链](docs/images/普通命令调用链示意图.png)
 
 ### UI重绘
 
