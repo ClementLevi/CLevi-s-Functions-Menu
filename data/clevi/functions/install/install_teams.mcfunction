@@ -36,3 +36,8 @@ scoreboard objectives setdisplay sidebar.team.green tradeCount
 team add lifeGoesOn {"text": "无死亡存活时长榜", "color": "aqua"}
 team modify lifeGoesOn color aqua
 scoreboard objectives setdisplay sidebar.team.aqua lifeGoesOn
+
+# 我是OP
+team add op {"text":"叩"}
+team modify op prefix {"text": "【叩】 ","color":"dark_green"}
+team modify op color gold
