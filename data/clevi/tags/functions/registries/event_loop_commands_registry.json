@@ -5,6 +5,8 @@
         "clevi:trigger_command_panel/toggle_ob",
         "clevi:trigger_command_panel/run_pick",
         "clevi:trigger_command_panel/modify_modify_pick_range",
-        "clevi:trigger_command_panel/run_kill"
+        "clevi:trigger_command_panel/run_kill",
+        "clevi:trigger_command_panel/run_show_leaderboards_menu",
+        "clevi:trigger_command_panel/modify_use_leaderboard"
     ]
 }

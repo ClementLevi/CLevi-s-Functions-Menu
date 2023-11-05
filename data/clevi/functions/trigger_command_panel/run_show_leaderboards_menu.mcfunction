@@ -1,0 +1,1 @@
+execute as @r[tag=IsRunningCommand, scores={command_panel=6}] run function clevi:commands/leaderboards/show_leaderboads_menu
