@@ -23,7 +23,7 @@ team modify damageTaken color dark_red
 scoreboard objectives setdisplay sidebar.team.dark_red damageTaken
 
 ## 65钓鱼榜
-team add fishing {"text": "受伤榜", "color": "dark_aqua"}
+team add fishing {"text": "钓鱼榜", "color": "dark_aqua"}
 team modify fishing color dark_aqua
 scoreboard objectives setdisplay sidebar.team.dark_aqua fishing
 
@@ -33,6 +33,6 @@ team modify tradeCount color green
 scoreboard objectives setdisplay sidebar.team.green tradeCount
 
 ## 67无死亡存活时长榜
-team add lifeGoesOn {"text": "受伤榜", "color": "aqua"}
+team add lifeGoesOn {"text": "无死亡存活时长榜", "color": "aqua"}
 team modify lifeGoesOn color aqua
 scoreboard objectives setdisplay sidebar.team.aqua lifeGoesOn
