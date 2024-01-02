@@ -1,2 +1,0 @@
-scoreboard objectives remove command_panel
-scoreboard objectives remove display_item

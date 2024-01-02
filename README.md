@@ -36,7 +36,7 @@
 安装好数据包后我们需要初始化。下列指令会将包括自定义计分板项的可选指令也一并安装。这是**推荐的安装方式，建议刚安装好数据包文件后即运行该初始化指令**：
 
 ```
-function clevi:install/install_all
+/function clevi:install/install_all
 ```
 
 **到这里，数据包就安装完成可以使用了。**
@@ -46,7 +46,7 @@ function clevi:install/install_all
 作为较为精简但可能包含功能缺失的安装方式，您也可以精简安装。首次使用数据包必须至少运行如下命令：
 
 ```
-function clevi:install/install_minimum
+/function clevi:install/install_minimum
 ```
 
 该命令仅仅初始化所有后续需要使用的计分板项，它们将作为环境全局变量和标记位置存在。
@@ -56,7 +56,7 @@ function clevi:install/install_minimum
 输入以下指令即可便捷地添加排行榜统计：
 
 ```
-function clevi:install/add_scoreboards
+/function clevi:install/add_scoreboards
 ```
 
 ### 使用
@@ -67,10 +67,14 @@ function clevi:install/add_scoreboards
 
 ### 卸载
 
-卸载时不会清除死亡榜信息和tab血条，仅仅移除本计分板所使用的全局变量计分板。输入以下指令以卸载：
+输入以下指令以完全卸载并禁用本数据包：`/function clevi:install/uninstall_all`
+
+#### 可选：简单卸载
+
+简单卸载时不会清除死亡榜信息、tab血条和游戏内侧边栏的数据（以便后悔时想加回来；)），仅仅移除数据包功能所使用的全局变量计分板。输入以下指令以卸载：
 
 ```
-function clevi:install/remove_triggers
+/function clevi:install/uninstall_keep_core_stats
 ```
 
 ---
@@ -230,6 +234,10 @@ tag @s remove IsRunningCommand
 
 新的功能已经添加完成，干得漂亮！
 
+---
+
+
+
 ## 拓展阅读
 
 本数据包启发自Javascript（Node JS）的事件循环机制。
@@ -306,6 +314,16 @@ schedule function clevi:schedulers/scheduler_check_login 1s
 | 子功能     | 这项功能修改了某个有状态功能需要读取的状态变量。<br />一般作为配置项存在。                                       |
 | 有UI功能   | 这项功能会提供一个可供交互的界面，或者其他界面的显示效果会因此功能的执行而发生变化。                             |
 | 危险功能   | 该功能在生存模式中往往对玩家甚至存档造成难以补救的损害。<br />这类功能需要使用醒目字体，并放置于不易误触的位置。 |
+
+### 编写安装和卸载信息
+
+在二次开发中，您可能会使用到一些计分板项或队伍。一般来说，您需要在使用它们前初始化，这是通过install路径下的mcfunction实现的。
+
+对于分支选项，一般将其放置在install/options/下，而install/下直接放置的是希望暴露给用户的安装/卸载函数。
+
+我们假定您的计分板项初始化并非是在安装数据包后手动添加的，而是随着数据包一同全新安装，这样install脚本才能发挥作用。
+
+在您编写完install脚本后，您应当将uninstall脚本也一并编写，考虑哪些数据是核心的，哪些是希望和数据包一同清理掉的。
 
 ### 开发建议
 

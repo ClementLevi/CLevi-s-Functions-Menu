@@ -43,5 +43,5 @@
     scoreboard objectives add tradeCount custom:traded_with_villager {"text": "交♂易","color": "green"}
 
 # 为你续一秒
-    # 昔人已乘黄鹤去
+    # 昔人已乘黄鹤去 @2022.11.30
     scoreboard objectives add lifeGoesOn custom:time_since_death {"text": "续了几秒","color": "aqua"}
