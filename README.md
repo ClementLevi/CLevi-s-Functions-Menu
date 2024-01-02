@@ -25,17 +25,27 @@
 
 ### 安装
 
-拖放至存档文件夹下的[datapacks]()，然后/reload即可加载。
+这是安装一个mc数据包的基本流程：
 
-下列指令会将包括自定义计分板项的可选指令也一并安装。这是**推荐的安装方式，建议刚安装好数据包文件后即运行该初始化指令**：
+1. 拖放至存档文件夹下的[datapacks]()。
+2. 接着以管理员身份输入 `/datapack enable "file/CLevi's Functions Menu"`启用数据包。（建议先 `/datapack list`看看有没有放对位置）
+3. 最后/reload即可加载。
+
+基本流程结束。
+
+安装好数据包后我们需要初始化。下列指令会将包括自定义计分板项的可选指令也一并安装。这是**推荐的安装方式，建议刚安装好数据包文件后即运行该初始化指令**：
 
 ```
 function clevi:install/install_all
 ```
 
-而作为较为精简但可能包含功能缺失的安装方式，您也可以精简安装。首次使用数据包必须至少运行如下命令：
+**到这里，数据包就安装完成可以使用了。**
 
-```mcfunction
+#### *可选*：精简安装
+
+作为较为精简但可能包含功能缺失的安装方式，您也可以精简安装。首次使用数据包必须至少运行如下命令：
+
+```
 function clevi:install/install_minimum
 ```
 
@@ -45,7 +55,7 @@ function clevi:install/install_minimum
 
 输入以下指令即可便捷地添加排行榜统计：
 
-```mcfunction
+```
 function clevi:install/add_scoreboards
 ```
 
@@ -75,13 +85,11 @@ function clevi:install/remove_triggers
 
 **CMD：1**
 
-
 #### Here 打招呼
 
 向服务器内所有玩家打招呼，这会将执行者的当前维度、坐标输出到聊天窗口中，并给予玩家5秒的发光效果以便穿墙发现。
 
 **CMD：2**
-
 
 #### Ob 旁观模式（有状态 有UI）
 
@@ -89,20 +97,17 @@ function clevi:install/remove_triggers
 
 **CMD：3（->on）、4（->off）**
 
-
 #### Pick 捡起周围掉落物（有状态 有UI）
 
 将一定半径内的掉落物传送到执行者身上。出于多人游戏公平考虑，周围32格以内的玩家将会收到字幕提示，且捡起掉落物的玩家也会被高亮3秒。
 
 **CMD：5**
 
-
 ##### Modify Pick Range 修改捡起半径（子功能 有状态 有UI）
 
 修改可以捡起的掉落物范围大小。允许的范围为4~16，步长为2，默认值为8。
 
 **CMD：50（-）、51（+）**
-
 
 #### Leaderboards 计分板排行榜（有状态 有UI）
 
@@ -125,7 +130,6 @@ function clevi:install/remove_triggers
 | 68      | (未实现)             |           |
 | 69      | 轮播排行榜（未实现） | gold      |
 
-
 #### Suicide 自杀（危险）
 
 自杀。
@@ -134,7 +138,99 @@ function clevi:install/remove_triggers
 
 ---
 
-## 二次开发引导
+## 二次开发快速入门
+
+### 构思创建一个功能
+
+我们假设新功能名叫diamond，其菜单按钮在点击后会在玩家的位置上空3m生成一个钻石块，并在聊天栏中输出“Diamond！”字样。
+
+要自定义一个新的功能，我们应当从需求设计开始。这包括：
+
+1. 这个功能存在状态吗？是否需要展示一个聊天栏UI？对于有状态的UI，我们往往使用一个新的scoreboard或tag来承载其状态；而UI则可能还需要使用[tellraw生成器](https://minecraft.tools/en/tellraw.php)来设计好预想中的展示效果。
+2. 目前已有多少功能存在，我的菜单会变得冗长吗？
+
+完成上述思考后，我们就应当为新功能分配一个CMD值。在我们的例子中，假设这个值是999。显然我们的例子功能并不需要状态，也不需要UI，所以我们可以进行下一步了。
+
+### 创建菜单项
+
+参考出厂自带菜单项的源代码，我们不难发现，菜单项的实质就是一个tellraw指令，其中有一个看起来像按钮的东西附带了clickEvent而已。所以我们可以使用上文提到的[tellraw生成器](https://minecraft.tools/en/tellraw.php)来新建一个菜单项。假设菜单项的名字与我们的新功能一样，那么我们在网页的生成器中煞有介事地画出这样好看的UI：
+
+![goodUI](image/README/goodUI.png)
+
+并且在方括号的范围内绑定调用的指令：
+
+![bind_clickEvet](image/README/bind_clickEvent.gif)
+
+经过绑定调用的指令后，我们就能生成这样的一段mc原版指令了（注意生成器结果开头的斜杠[需要删除]()，以便在mcfunction文件中使用）：
+
+```
+tellraw @a ["",{"text":" | "},{"text":"[ diamond! ]","color":"aqua","clickEvent":{"action":"run_command","value":"/trigger command_panel set 999"}},{"text":" \u70b9\u6211\u521b\u9020\u94bb\u77f3\uff01"}]
+```
+
+这个指令需要在我们叫出菜单时显示，所以我们将其粘贴到 `CLevi's Functions Menu\data\clevi\functions\commands\show_menu.mcfunction`的恰当位置（行30-32）：
+
+![createMenu](image/README/createMenu.png "(我使用了/tellraw preview这个VSCode扩展)")
+
+这样，我们的主菜单就更新好了。
+
+### 理解回调值
+
+值得注意，我们并没有在上面的点击事件中直接绑定我们的业务逻辑代码，而是使用trigger指令为一个已经存在的名为“command_panel”的trigger类型计分板项设置了值999。我们目前并不需要理解这其中的深意，只需要知道，本数据包会时刻检查每位玩家的该计分板项，一旦值不为0，则调用对应功能。
+
+实际上，这里绑定的函数体完全可以是业务逻辑，只是为了便于统一管理、做到UI和实现相分离，我们选择用这种方式。采取直接绑定业务逻辑的功能也是可以存在的，我们后面会讲到。
+
+### 创建回调控制器
+
+接下来，我们在 `CLevi's Functions Menu\data\clevi\functions\trigger_command_panel\`路径下创建一个新的控制器，将其命名为run_diamond.mcfunction，和其他的控制器（形如run_...）放在一起。其内容非常简单：
+
+```
+execute as @r[tag=IsRunningCommand, scores={command_panel=999}] at @s run function clevi:commands/diamond
+```
+
+这一行代码很简单，随机挑选一名玩家，如果其身上带有表示玩家正在这一Tick调用功能的IsRunningCommand标签，且其command_panel计分板值为我们构想中的CMD值999，则执行commands/diamond函数。不难看出，这里只有command_panel=${CMD}和所调用函数的名字是需要修改的。当然，我们目前还没有在commands文件夹下创建diamond.mcfunction文件，所以我们现在可以开始写业务逻辑代码了。
+
+### 编写业务逻辑
+
+创建commands/diamond.mcfunction，将我们的业务逻辑（点击时在玩家头顶3m处生成一个钻石块并发消息）使用mc指令编写出来：
+
+```
+# CMD: 999
+setblock ~ ~3 ~ diamond_block
+say Diamond！
+
+# Exit Function
+execute as @s run scoreboard players set @a command_panel 0
+tag @s remove IsRunningCommand
+
+```
+
+其中最后一段Exit Function是所有功能都必须有的，它表示当前玩家已经结束了本功能调用，可以将计分板项归零，并清除正在调用功能的标签IsRunningCommand了。具体参见后文。
+
+### 注册回调控制器
+
+业务逻辑写好了，但还别急着测试！我们并没有将回调控制器注册到轮询注册表当中。我们需要打开 `CLevi's Functions Menu\data\clevi\tags\functions\registries\event_loop_commands_registry.json`，在其中最后一行追加我们的回调控制器：
+
+```
+        ...,
+        "clevi:trigger_command_panel/run_diamond"
+    ]
+}
+
+```
+
+这样一来，轮询事件循环就能访问到我们的控制器了。
+
+### 测试数据包功能
+
+让我们将整个 `CLevi's Functions Menu`文件夹放到游戏目录中测试一下！
+
+对于单人模式，这需要放到 `saves/${你的存档文件夹}/datapacks`下；这对于服务器也是一样的。参考最前面的安装说明，我们启用数据包试玩一下！
+
+![successfully_added_new_function](image\README\successfully_added_new_function.gif)
+
+新的功能已经添加完成，干得漂亮！
+
+## 拓展阅读
 
 本数据包启发自Javascript（Node JS）的事件循环机制。
 
@@ -142,7 +238,7 @@ function clevi:install/remove_triggers
 
 Minecraft游戏提供了[minecraft:tick](./data/minecraft/tags/functions/tick.json)标签，注册于该标签内的函数每gt都会被按顺序执行一次，由此构成了事件循环Event Loop。本数据包通过该接口注册每gt需监听触发事件的函数列表（实际位于[tags/command_registry.json](.\data\clevi\tags\functions\commands_registry.json)文件中），将玩家计分板项command_panel数值作为事件触发判据，确定何回调函数会在本事件循环中触发。
 
-而对于玩家而言，一切都从一个聊天栏中出现的主菜单开始。
+而对于玩家而言，一切都从一聊天栏中出现的主菜单开始。
 
 ### 功能调用链
 
