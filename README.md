@@ -226,7 +226,7 @@ tag @s remove IsRunningCommand
 
 对于单人模式，这需要放到 `saves/${你的存档文件夹}/datapacks`下；这对于服务器也是一样的。参考最前面的安装说明，我们启用数据包试玩一下！
 
-![successfully_added_new_function](image\README\successfully_added_new_function.gif)
+![successfully_added_new_function](image/README/successfully_added_new_function.gif)
 
 新的功能已经添加完成，干得漂亮！
 
