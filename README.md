@@ -56,7 +56,7 @@
 输入以下指令即可便捷地添加排行榜统计：
 
 ```
-/function clevi:install/add_scoreboards
+/function clevi:install/options/add_scoreboards
 ```
 
 ### 使用
