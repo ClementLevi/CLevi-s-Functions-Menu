@@ -1,7 +1,7 @@
 # HP Bar
     scoreboard objectives add hp health
     scoreboard objectives modify hp rendertype hearts
-    scoreboard objectives setdisplay belowName hp
+    scoreboard objectives setdisplay below_name hp
 
     # 不喜欢黄色笑话的可以改掉
     scoreboard objectives modify hp displayname {"text":"cm", "color":"gold"}
